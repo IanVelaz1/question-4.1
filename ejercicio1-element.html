@@ -1,0 +1,95 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="stylesheet" href="../polymer/lib/elements/dom-repeat.html">
+
+<dom-module id="ejercicio1-element">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      li{
+      color:var(--list-color,blue );
+      }
+    </style>
+   <iron-input bind-value="{{userName}}">
+    <input placeholder="user name">
+   </iron-input>
+   <iron-input bind-value="{{userAge}}">
+    <input type="number"  placeholder="user age">
+   </iron-input>
+   <button on-click="addUser">Agregar usuario</button>
+   <template is="dom-repeat" items="[[userArray]]" as="user">
+     <ul>
+       <li>
+         [[user.name]]  [[user.age]]
+       </li>
+     </ul>
+   </template> 
+  </template>
+
+  <script>
+    /**
+     * `ejercicio1-element`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class Ejercicio1Element extends Polymer.Element {
+      static get is() { return 'ejercicio1-element'; }
+      static get properties() {
+        return {
+          userName:{
+            type:String,
+            value:"",
+            observer:"userNameChanged"
+          },
+          userAge:{
+            type:Number,
+            value:0,
+            observer:"userAgeChanged"
+          },
+          userArray:{
+            type:Array,
+            value(){
+              return []
+            }
+          }
+        };
+      }
+
+      userNameChanged(){
+        console.log(this.userName);
+        
+        this.dispatchEvent(new CustomEvent("name-changed",{
+          bubbles:false,
+          composed:false,
+          detail:this.userName
+        }))
+      }
+
+      userAgeChanged(){
+        console.log(this.userAge);
+        this.dispatchEvent(new CustomEvent("age-changed",{
+          bubbles:false,
+          composed:false,
+          detail:this.userAge
+        }))
+      }
+
+      addUser(){
+        let objectUser={
+          name:this.userName,
+          age:this.userAge
+        }
+        this.push("userArray",objectUser);
+      }
+
+
+    }
+
+    window.customElements.define(Ejercicio1Element.is, Ejercicio1Element);
+  </script>
+</dom-module>
